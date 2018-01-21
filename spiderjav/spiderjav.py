@@ -4,8 +4,8 @@ from threading import Thread
 import multiprocessing
 import chardet
 
-get_in_url = 'http://www.j17v.com/cn/'
-get_magnet_url = 'http://www.diaosisou.org/list/'
+get_in_url = 'http://www.j17v.com/cn/'  #找片站
+get_magnet_url = 'http://www.diaosisou.org/list/'  #下片站
 
 
 headers = {
@@ -42,7 +42,7 @@ def get_imfor(weburl, params_lists):
             av_name = soup.find(class_='post-title text').find('a').get_text()  # 片名
             av_id = soup.find(id='video_id').find(class_='text').get_text()  # 番号
             av_star = soup.find(id='video_review').find(class_='score').get_text()  # 评价星数
-            av_genre_list = soup.find(id='video_genres').find_all(text=re.compile('[\u4e00-\u9fa5]'))[1:]  # 标签列表
+            av_genre_list = soup.find(id='video_genres').find_all(text=re.compile('[\u4e00-\u9fa5]'))[1:]  # 标签列表 提取中文
             av_actor = soup.find(id='video_cast').find(rel='tag').get_text()  # 演员
 
             line = av_id + ',' + av_name + ',' + av_actor + ',' + av_star.strip('()') + ',' + ''.join(map(str, av_genre_list)) + '\n'
@@ -63,7 +63,7 @@ def get_imfor(weburl, params_lists):
             print('网页404')
             continue
 
-
+# 获取种子
 def get_magnet(av_name,path):
     url = get_magnet_url + av_name + '/'
     r = requests.get(url)

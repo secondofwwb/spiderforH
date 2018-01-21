@@ -13,7 +13,7 @@ def get_img_src(web_src):
         soup = BeautifulSoup(r.text, "html.parser")
         img_src = soup.find_all(id='thumbnail')[0].get('src')
         img_title = soup.find('title').get_text()
-        img_title = re.sub("[<>/\\\\:\"\*\?\|]+", "_", img_title) #去除名字中的特殊符号
+        img_title = re.sub("[<>/\\\\:\"\*\?\|]+", "_", img_title) #去除名字中的特殊符号（windows）
         # 通过正则获取每一份内容文件数量
         match = re.findall("option", r.text)
         if match:
@@ -26,8 +26,6 @@ def get_img_src(web_src):
 
         img_srcs = [re.sub('/\d{3}\.', '/'+str(num), str(img_src)) for num in img_str_list]  # 替换掉编号
 
-        print(img_srcs)
-        # img_srcs = [str(img_src).replace('001.jpg', num) for num in img_str_list]
         img_srcs.append(img_title.replace('\\', '_'))
     except:
         return print('打开主网页时发生错误网页')
@@ -58,13 +56,11 @@ def creat_img_path(imgname):
 
     return img_path
 
-def save_img_pro(img_src,img_path,imgnum):
-    Thread(target=save_img, args=(img_src, img_path, imgnum)).start()
 
 
 if __name__ == '__main__':
     p = multiprocessing.Pool(4)
-    for webnum in range(16296, 16365):    #16253
+    for webnum in range(16296, 16365):    #更改所爬漫画册数
         web_src = 'https://hcomic.me/manga/' + str(webnum) + '.html'
         img_srcs = get_img_src(web_src)
         print(img_srcs)
